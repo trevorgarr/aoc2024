@@ -20,7 +20,7 @@ def parse_input(input):
 
 
 def part_one(mappings, instrs):
-    # Mapping = value -> all values that must come after
+    # Mapping = value -> all values that must come after (before: after[])
     # Create a set of seen values.
     # For every value in a row of instructions, if any previously seen values
     # are in the current value's mapping entry (values that must come after)
