@@ -74,18 +74,49 @@ def count_path(grid):
 
 def part_two(grid):
     num_cycles = 0
-    direction, idx_r, idx_c = find_direction(grid)
+    num_rows = len(grid)
+    num_cols = len(grid[0])
 
     for idx_r, row in enumerate(grid):
         for idx_c, col in enumerate(row):
-            seen = set()
-            if (direction, idx_r, idx_c) in seen:
-                num_cycles += 1
+            if grid[idx_r][idx_c] != "^" and grid[idx_r][idx_c] != "#":
+                seen = set()
+                direction, rs_idx, cs_idx = find_direction(grid)
+                before = grid[idx_r][idx_c]
+                grid[idx_r][idx_c] = "#"
+                while 0 <= rs_idx < num_rows and 0 <= cs_idx < num_cols:
+                    seen.add((direction, rs_idx, cs_idx))
+                    if grid[rs_idx][cs_idx] == "#":
+                        if direction == "up":
+                            direction = "right"
+                            rs_idx += 1
+                        elif direction == "left":
+                            cs_idx += 1
+                            direction = "up"
+                        elif direction == "right":
+                            cs_idx -= 1
+                            direction = "down"
+                        elif direction == "down":
+                            rs_idx -= 1
+                            direction = "left"
+
+                    if direction == "up":
+                        rs_idx -= 1
+                    elif direction == "left":
+                        cs_idx -= 1
+                    elif direction == "right":
+                        cs_idx += 1
+                    elif direction == "down":
+                        rs_idx += 1
+                    if (direction, rs_idx, cs_idx) in seen:
+                        num_cycles += 1
+                        break
+                grid[idx_r][idx_c] = before
     return num_cycles
 
 
 if __name__ == "__main__":
-    f = open("test.txt", "r")
+    f = open("day6.txt", "r")
     data = f.read()
     input = data.splitlines()
     parsed_input = parse_input(input)
