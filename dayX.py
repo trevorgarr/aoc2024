@@ -20,6 +20,7 @@ if __name__ == "__main__":
     data = f.read()
     input = data.splitlines()
     parsed_input = parse_input(input)
+    print("PARSED_INPUT: ", parsed_input)
     print("PART ONE =", part_one(parsed_input))
     print("PART TWO =", part_two(parsed_input))
     f.close()

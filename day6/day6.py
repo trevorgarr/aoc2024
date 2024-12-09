@@ -1,0 +1,96 @@
+"""
+2024 AOC Day 6:
+"""
+
+import numpy as np
+
+
+def parse_input(input):
+    output = []
+    for row in input:
+        output.append(list(row))
+    return output
+
+
+def part_one(grid):
+    num_rows = len(grid)
+    num_cols = len(grid[0])
+    direction, idx_r, idx_c = find_direction(grid)
+    while 0 <= idx_r < num_rows and 0 <= idx_c < num_cols:
+        if grid[idx_r][idx_c] == "#":
+            if direction == "up":
+                direction = "right"
+                idx_r += 1
+            elif direction == "left":
+                idx_c += 1
+                direction = "up"
+            elif direction == "right":
+                idx_c -= 1
+                direction = "down"
+            elif direction == "down":
+                idx_r -= 1
+                direction = "left"
+
+        grid[idx_r][idx_c] = "X"
+
+        if direction == "up":
+            idx_r -= 1
+        elif direction == "left":
+            idx_c -= 1
+        elif direction == "right":
+            idx_c += 1
+        elif direction == "down":
+            idx_r += 1
+    return count_path(grid)
+
+
+def find_direction(grid):
+    direction = "up"
+    for idx_r, row in enumerate(grid):
+        for idx_c, col in enumerate(row):
+            if grid[idx_r][idx_c] == "^":
+                direction = "up"
+                return direction, idx_r, idx_c
+            if grid[idx_r][idx_c] == ">":
+                direction = "right"
+                return direction, idx_r, idx_c
+            if grid[idx_r][idx_c] == "<":
+                direction = "left"
+                return direction, idx_r, idx_c
+            if grid[idx_r][idx_c] == "v":
+                direction = "down"
+                return direction, idx_r, idx_c
+    return direction
+
+
+def count_path(grid):
+    count = 0
+    for idx_r, row in enumerate(grid):
+        for idx_c, col in enumerate(row):
+            if grid[idx_r][idx_c] == "X":
+                count += 1
+    return count
+
+
+def part_two(grid):
+    num_cycles = 0
+    direction, idx_r, idx_c = find_direction(grid)
+
+    for idx_r, row in enumerate(grid):
+        for idx_c, col in enumerate(row):
+            seen = set()
+            if (direction, idx_r, idx_c) in seen:
+                num_cycles += 1
+    return num_cycles
+
+
+if __name__ == "__main__":
+    f = open("test.txt", "r")
+    data = f.read()
+    input = data.splitlines()
+    parsed_input = parse_input(input)
+    print("PARSED_INPUT: ", print(np.matrix(parsed_input)))
+    print("PART ONE =", part_one(parsed_input))
+    parsed_input = parse_input(input)
+    print("PART TWO =", part_two(parsed_input))
+    f.close()
