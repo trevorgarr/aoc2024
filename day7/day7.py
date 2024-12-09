@@ -1,13 +1,22 @@
 """
-2024 AOC Day X:
+2024 AOC Day 7:
 """
+
+from collections import defaultdict
 
 
 def parse_input(input):
-    return input
+    output = defaultdict(list)
+    for row in input:
+        split = row.split(":")
+        output[int(split[0].strip())] += [int(x) for x in split[1].split()]
+    return output
 
 
 def part_one(parsed_input):
+    for pot_sum in parsed_input:
+        print(pot_sum)
+        print(parsed_input[pot_sum])
     return -1
 
 
