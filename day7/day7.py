@@ -6,26 +6,58 @@ from collections import defaultdict
 
 
 def parse_input(input):
-    output = defaultdict(list)
+    output = []
     for row in input:
         split = row.split(":")
-        output[int(split[0].strip())] += [int(x) for x in split[1].split()]
+        output.append([int(split[0].strip())] + [int(x)
+                                                 for x in split[1].split()])
     return output
 
 
 def part_one(parsed_input):
-    for pot_sum in parsed_input:
-        print(pot_sum)
-        print(parsed_input[pot_sum])
-    return -1
+    sum_valid = 0
+    for row in parsed_input:
+        target = row[0]
+        nums = row[1:]
+        if is_valid_p1(target, nums):
+            sum_valid += target
+    return sum_valid
+
+
+def is_valid_p1(target, nums):
+    if len(nums) == 1:
+        return nums[0] == target
+    if is_valid_p1(target, [nums[0] + nums[1]] + nums[2:]):
+        return True
+    if is_valid_p1(target, [nums[0] * nums[1]] + nums[2:]):
+        return True
+    return False
 
 
 def part_two(parsed_input):
-    return -1
+    sum_valid = 0
+    for row in parsed_input:
+        target = row[0]
+        nums = row[1:]
+        if is_valid_p2(target, nums):
+            sum_valid += target
+    return sum_valid
+
+
+def is_valid_p2(target, nums):
+    if len(nums) == 1:
+        return nums[0] == target
+    if is_valid_p2(target, [nums[0] + nums[1]] + nums[2:]):
+        return True
+    if is_valid_p2(target, [nums[0] * nums[1]] + nums[2:]):
+        return True
+    if is_valid_p2(target, [int(str(nums[0]) + str(nums[1]))] + nums[2:]):
+        return True
+    return False
 
 
 if __name__ == "__main__":
-    f = open("test.txt", "r")
+    f = open("day7.txt", "r")
     data = f.read()
     input = data.splitlines()
     parsed_input = parse_input(input)
