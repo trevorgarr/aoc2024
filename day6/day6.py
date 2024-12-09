@@ -16,6 +16,8 @@ def part_one(grid):
     num_rows = len(grid)
     num_cols = len(grid[0])
     direction, idx_r, idx_c = find_direction(grid)
+    start_idx_r = idx_r
+    start_idx_c = idx_c
     while 0 <= idx_r < num_rows and 0 <= idx_c < num_cols:
         if grid[idx_r][idx_c] == "#":
             if direction == "up":
@@ -41,6 +43,7 @@ def part_one(grid):
             idx_c += 1
         elif direction == "down":
             idx_r += 1
+    grid[start_idx_r][start_idx_c] = "^"
     return count_path(grid)
 
 
@@ -67,7 +70,7 @@ def count_path(grid):
     count = 0
     for idx_r, row in enumerate(grid):
         for idx_c, col in enumerate(row):
-            if grid[idx_r][idx_c] == "X":
+            if grid[idx_r][idx_c] == "X" or grid[idx_r][idx_c] == "^":
                 count += 1
     return count
 
@@ -79,7 +82,7 @@ def part_two(grid):
 
     for idx_r, row in enumerate(grid):
         for idx_c, col in enumerate(row):
-            if grid[idx_r][idx_c] != "^" and grid[idx_r][idx_c] != "#":
+            if grid[idx_r][idx_c] == "^" or grid[idx_r][idx_c] == "X":
                 seen = set()
                 direction, rs_idx, cs_idx = find_direction(grid)
                 before = grid[idx_r][idx_c]
@@ -122,6 +125,5 @@ if __name__ == "__main__":
     parsed_input = parse_input(input)
     print("PARSED_INPUT: ", print(np.matrix(parsed_input)))
     print("PART ONE =", part_one(parsed_input))
-    parsed_input = parse_input(input)
     print("PART TWO =", part_two(parsed_input))
     f.close()
