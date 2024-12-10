@@ -2,8 +2,6 @@
 2024 AOC Day 7:
 """
 
-from collections import defaultdict
-
 
 def parse_input(input):
     output = []
