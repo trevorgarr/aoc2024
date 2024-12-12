@@ -1,9 +1,7 @@
 """
 2024 AOC Day 10:
 """
-
-row_len = 0
-col_len = 0
+import numpy as np
 
 
 def parse_input(input):
@@ -14,91 +12,114 @@ def parse_input(input):
 def part_one(grid):
     row_len = len(grid)
     col_len = len(grid[0])
+
+    def find_path(idx_r, idx_c, target):
+        if idx_r >= row_len or idx_r < 0 or idx_c >= col_len or idx_c < 0 or grid[idx_r][idx_c] != target:
+            return set()
+
+        if target == 9:
+            return {(idx_r, idx_c)}
+
+        # mark visited
+        grid[idx_r][idx_c] = -1
+
+        score = set()
+        # look down
+        score.update(find_path(idx_r + 1, idx_c, target+1))
+        # look up
+        score.update(find_path(idx_r - 1, idx_c, target+1))
+        # look right
+        score.update(find_path(idx_r, idx_c + 1, target+1))
+        # look left
+        score.update(find_path(idx_r, idx_c - 1, target+1))
+
+        # backtrack
+        grid[idx_r][idx_c] = target
+
+        return score
+
+    total_score = 0
+    for idx_r, row in enumerate(grid):
+        for idx_c, val in enumerate(row):
+            if val == 0:
+                indiv_score = find_path(idx_r, idx_c, 0)
+                total_score += len(indiv_score)
+    return total_score
+
+
+def part_two(grid):
+    row_len = len(grid)
+    col_len = len(grid[0])
+
+    def find_path(idx_r, idx_c, target):
+        if idx_r >= row_len or idx_r < 0 or idx_c >= col_len or idx_c < 0 or grid[idx_r][idx_c] != target:
+            return 0
+
+        if target == 9:
+            return 1
+
+        grid[idx_r][idx_c] = -1
+        sum = 0
+        # look down
+        sum += find_path(idx_r + 1, idx_c, target+1)
+        # look up
+        sum += find_path(idx_r - 1, idx_c, target+1)
+        # look right
+        sum += find_path(idx_r, idx_c + 1, target+1)
+        # look left
+        sum += find_path(idx_r, idx_c - 1, target+1)
+
+        grid[idx_r][idx_c] = target
+
+        return sum
+
     score = 0
     for idx_r, row in enumerate(grid):
         for idx_c, val in enumerate(row):
             if val == 0:
-                print("outer iter")
-                seen = [0]
-                score += find_path(grid, idx_r, idx_c, seen)
+                score += find_path(idx_r, idx_c, 0)
     return score
 
 
-def find_path(grid, idx_r, idx_c, seen):
-    row_len = len(grid)
-    col_len = len(grid[0])
-    print(idx_r, idx_c, seen)
-    if seen == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
-        return 1
+# def find_unique_path(grid, idx_r, idx_c, seen):
+#     row_len = len(grid)
+#     col_len = len(grid[0])
+#     print(idx_r, idx_c, seen)
+#     if seen == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
+#         return 1
 
-    sum = 0
-    # look down
-    if (idx_r < row_len - 1):
-        next_val = grid[idx_r + 1][idx_c]
-        if next_val == seen[-1] + 1:
-            seen.append(next_val)
-            sum += find_path(grid, idx_r + 1, idx_c, seen)
-    # look up
-    if (idx_r > 0):
-        next_val = grid[idx_r - 1][idx_c]
-        if next_val == seen[-1] + 1:
-            seen.append(next_val)
-            sum += find_path(grid, idx_r - 1, idx_c, seen)
-    # look right
-    if (idx_c < col_len - 1):
-        next_val = grid[idx_r][idx_c + 1]
-        if next_val == seen[-1] + 1:
-            seen.append(next_val)
-            sum += find_path(grid, idx_r, idx_c + 1, seen)
-    # look left
-    if (idx_c > 0):
-        next_val = grid[idx_r][idx_c - 1]
-        if next_val == seen[-1] + 1:
-            seen.append(next_val)
-            sum += find_path(grid, idx_r, idx_c - 1, seen)
-    return sum
-
-
-def find_unique_path(grid, idx_r, idx_c, seen):
-    row_len = len(grid)
-    col_len = len(grid[0])
-    print(idx_r, idx_c, seen)
-    if seen == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
-        return 1
-
-    # look down
-    if (idx_r < row_len - 1):
-        next_val = grid[idx_r + 1][idx_c]
-        if next_val == seen[-1] + 1:
-            seen.append(next_val)
-            return find_unique_path(grid, idx_r + 1, idx_c, seen)
-    # look up
-    if (idx_r > 0):
-        next_val = grid[idx_r - 1][idx_c]
-        if next_val == seen[-1] + 1:
-            seen.append(next_val)
-            return find_unique_path(grid, idx_r - 1, idx_c, seen)
-    # look right
-    if (idx_c < col_len - 1):
-        next_val = grid[idx_r][idx_c + 1]
-        if next_val == seen[-1] + 1:
-            seen.append(next_val)
-            return find_unique_path(grid, idx_r, idx_c + 1, seen)
-    # look left
-    if (idx_c > 0):
-        next_val = grid[idx_r][idx_c - 1]
-        if next_val == seen[-1] + 1:
-            seen.append(next_val)
-            return find_unique_path(grid, idx_r, idx_c - 1, seen)
-    return 0
+#     # look down
+#     if (idx_r < row_len - 1):
+#         next_val = grid[idx_r + 1][idx_c]
+#         if next_val == seen[-1] + 1:
+#             seen.append(next_val)
+#             return find_unique_path(grid, idx_r + 1, idx_c, seen)
+#     # look up
+#     if (idx_r > 0):
+#         next_val = grid[idx_r - 1][idx_c]
+#         if next_val == seen[-1] + 1:
+#             seen.append(next_val)
+#             return find_unique_path(grid, idx_r - 1, idx_c, seen)
+#     # look right
+#     if (idx_c < col_len - 1):
+#         next_val = grid[idx_r][idx_c + 1]
+#         if next_val == seen[-1] + 1:
+#             seen.append(next_val)
+#             return find_unique_path(grid, idx_r, idx_c + 1, seen)
+#     # look left
+#     if (idx_c > 0):
+#         next_val = grid[idx_r][idx_c - 1]
+#         if next_val == seen[-1] + 1:
+#             seen.append(next_val)
+#             return find_unique_path(grid, idx_r, idx_c - 1, seen)
+#     return 0
 
 
-def part_two(parsed_input):
-    return -1
-
+# def part_two(parsed_input):
+#     return -1
 
 if __name__ == "__main__":
-    f = open("test.txt", "r")
+    f = open("day10.txt", "r")
     data = f.read()
     input = data.splitlines()
     parsed_input = parse_input(input)
