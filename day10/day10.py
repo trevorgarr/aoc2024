@@ -81,43 +81,6 @@ def part_two(grid):
     return score
 
 
-# def find_unique_path(grid, idx_r, idx_c, seen):
-#     row_len = len(grid)
-#     col_len = len(grid[0])
-#     print(idx_r, idx_c, seen)
-#     if seen == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
-#         return 1
-
-#     # look down
-#     if (idx_r < row_len - 1):
-#         next_val = grid[idx_r + 1][idx_c]
-#         if next_val == seen[-1] + 1:
-#             seen.append(next_val)
-#             return find_unique_path(grid, idx_r + 1, idx_c, seen)
-#     # look up
-#     if (idx_r > 0):
-#         next_val = grid[idx_r - 1][idx_c]
-#         if next_val == seen[-1] + 1:
-#             seen.append(next_val)
-#             return find_unique_path(grid, idx_r - 1, idx_c, seen)
-#     # look right
-#     if (idx_c < col_len - 1):
-#         next_val = grid[idx_r][idx_c + 1]
-#         if next_val == seen[-1] + 1:
-#             seen.append(next_val)
-#             return find_unique_path(grid, idx_r, idx_c + 1, seen)
-#     # look left
-#     if (idx_c > 0):
-#         next_val = grid[idx_r][idx_c - 1]
-#         if next_val == seen[-1] + 1:
-#             seen.append(next_val)
-#             return find_unique_path(grid, idx_r, idx_c - 1, seen)
-#     return 0
-
-
-# def part_two(parsed_input):
-#     return -1
-
 if __name__ == "__main__":
     f = open("day10.txt", "r")
     data = f.read()
