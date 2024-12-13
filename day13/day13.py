@@ -3,20 +3,21 @@
 """
 import re
 import numpy as np
+import time
 
 
 def parse_input(input, offset):
     equations = []
-    button_pattern = "X\+(\d+), Y\+(\d+)"
-    prize_pattern = "X=(\d+), Y=(\d+)"
+    button_pattern = re.compile(r"X\+(\d+), Y\+(\d+)")
+    prize_pattern = re.compile(r"X=(\d+), Y=(\d+)")
     for i in range(0, len(input), 4):
-        A_vals = re.search(button_pattern, input[i])
+        A_vals = button_pattern.search(input[i])
         A_x_val, A_y_val = int(A_vals.group(1)), int(A_vals.group(2))
 
-        B_vals = re.search(button_pattern, input[i+1])
+        B_vals = button_pattern.search(input[i+1])
         B_x_val, B_y_val = int(B_vals.group(1)), int(B_vals.group(2))
 
-        P_vals = re.search(prize_pattern, input[i+2])
+        P_vals = prize_pattern.search(input[i+2])
         P_x_val, P_y_val = int(P_vals.group(1)), int(P_vals.group(2))
 
         equations.append([(A_x_val, B_x_val, P_x_val + offset),
@@ -56,8 +57,13 @@ if __name__ == "__main__":
     f = open("day13.txt", "r")
     data = f.read()
     input = data.splitlines()
+    p1_start_time = time.time()
     parsed_input_p1 = parse_input(input, 0)
     print("PART ONE =", part_one(parsed_input_p1))
+    print("--- %s seconds ---" % round((time.time() - p1_start_time), 4))
+    p2_start_time = time.time()
     parsed_input_p2 = parse_input(input, 10000000000000)
     print("PART TWO =", part_two(parsed_input_p2))
+    print("--- %s seconds ---" % round((time.time() - p2_start_time), 4))
+
     f.close()
