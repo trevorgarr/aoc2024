@@ -45,7 +45,6 @@ def part_one(parsed_input):
 
 
 def part_two(parsed_input):
-    
     for right_idx in range(len(parsed_input))[::-1]:
         for left_idx in range(right_idx):
             right_val, right_size = parsed_input[right_idx]
