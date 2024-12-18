@@ -45,19 +45,15 @@ def part_one(parsed_input):
 
 
 def part_two(parsed_input):
-    print(parsed_input)
-    print()
-
-    for i in range(len(parsed_input))[::-1]:
-        for j in range(i):
-            free_val, free_len = parsed_input[i]
-            used_val, used_len = parsed_input[j]
-            if free_val and not used_val and free_len <= used_len:
-                parsed_input[i] = (None, free_len)
-                parsed_input[j] = (None, used_len - free_len)
-                parsed_input.insert(j, (free_val, free_len))
-
-    print(parsed_input)
+    
+    for right_idx in range(len(parsed_input))[::-1]:
+        for left_idx in range(right_idx):
+            right_val, right_size = parsed_input[right_idx]
+            left_val, left_size = parsed_input[left_idx]
+            if left_val is None and right_val is not None and left_size >= right_size:
+                parsed_input[right_idx] = (None, right_size)
+                parsed_input[left_idx] = (None, left_size - right_size)
+                parsed_input.insert(left_idx, (right_val, right_size))
 
     disk = []
     for file_id, size in parsed_input:
@@ -65,8 +61,6 @@ def part_two(parsed_input):
             disk.extend([None] * size)
         else:
             disk.extend([file_id] * size)
-
-    print(disk)
 
     output = 0
     for i, d in enumerate(disk):
@@ -76,7 +70,7 @@ def part_two(parsed_input):
 
 
 if __name__ == "__main__":
-    f = open("test.txt", "r")
+    f = open("day9.txt", "r")
     data = f.read()
     input = data.splitlines()
     parsed_input = parse_input(input)
